@@ -5,7 +5,7 @@ import { User } from '../interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private token: string | null = null;
+  private token: string = '';
   constructor(private http: HttpClient) {}
 
   register(user: User): Observable<User> {
@@ -25,7 +25,7 @@ export class AuthService {
     this.token = token;
   }
 
-  getToken(): string | null {
+  getToken(): string {
     return this.token;
   }
 
@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   logout() {
-    this.token = null;
+    this.token = '';
     localStorage.clear();
   }
 }
