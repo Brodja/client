@@ -17,5 +17,5 @@
     placeholder="Пароль"
   />
   <br />
-  <button [disabled]="form.invalid" type="submit" id="loginBtn">Логін</button>
+  <button [disabled]="form.invalid || form.disabled" type="submit" id="loginBtn">Логін</button>
 </form>
