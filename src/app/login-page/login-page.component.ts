@@ -26,6 +26,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
     this.route.queryParams.subscribe((params: Params) => {
       if (params['registered']) {
+        console.log('registered');
         //
       } else if (params['accessDenied']) {
         //
@@ -35,14 +36,13 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.form.disable();
-
     const user = {
       email: this.form.value.email,
       password: this.form.value.password,
     };
     this.aSub = this.auth.login(user).subscribe(
       () => {
-        this.router.navigate(['/overview'])
+        // this.router.navigate(['/overview'])
       },
       (error) => {
         console.warn(error);

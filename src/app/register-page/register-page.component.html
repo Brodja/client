@@ -1,6 +1,31 @@
-<div class="register" id="register">
-  <input class="my_input" type="text" id="registerLogin" required placeholder="Логін" /> <br />
-  <input class="my_input" type="email" id="registerEmail" required placeholder="Імейл" /> <br />
-  <input class="my_input" type="password" id="registerPassword" required placeholder="Пароль" /> <br />
-  <button id="registerBtn">Реєстрація</button>
-</div>
+<form class="register" [formGroup]="form" (ngSubmit)="onSubmit()" id="register">
+  <input
+    formControlName="login"
+    class="my_input"
+    type="text"
+    id="registerLogin"
+    autocomplete="on"
+    placeholder="Логін"
+  />
+  <br />
+  <input
+    formControlName="email"
+    class="my_input"
+    type="email"
+    id="loginEmail"
+    autocomplete="on"
+    placeholder="Імейл"
+  />
+  <br />
+  <input
+    formControlName="password"
+    class="my_input"
+    type="password"
+    id="loginPassword"
+    autocomplete="on"
+    placeholder="Пароль"
+  />
+  <br />
+
+  <button [disabled]="form.invalid || form.disabled" type="submit" id="registerBtn">Реєстрація</button>
+</form>
