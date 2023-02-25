@@ -39,7 +39,7 @@ a {
   line-height: 23px;
 }
 
-.auth-block {
+#auth-block {
   margin: 0 auto;
   width: 35%;
   min-width: 300px;
