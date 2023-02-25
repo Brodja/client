@@ -7,7 +7,7 @@ import { AuthService } from '../shared/services/auth.service';
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
-  styleUrls: ['./login-page.component.sass'],
+  styleUrls: ['./login-page.component.css'],
 })
 export class LoginPageComponent implements OnInit, OnDestroy {
   form!: FormGroup;
