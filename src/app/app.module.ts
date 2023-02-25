@@ -11,6 +11,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { TokenInterceptor } from './shared/classes/token.interceptor';
 import { OverviewPageComponent } from './overview-page/overview-page.component';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
+import { GamesPageComponent } from './games-page/games-page.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { OverviewPageComponent } from './overview-page/overview-page.component';
     AuthLayoutComponent,
     SiteLayoutComponent,
     RegisterPageComponent,
-    OverviewPageComponent
+    OverviewPageComponent,
+    ProfilePageComponent,
+    GamesPageComponent
   ],
   imports: [
     BrowserModule,

@@ -9,7 +9,9 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SiteLayoutComponent {
   links = [
-    { url: '/overview', name: 'Обзор' },
+    { url: '/overview', name: 'Overview' },
+    { url: '/profile', name: 'Profile' },
+    { url: '/games', name: 'Games' },
     { url: '/analytics', name: 'Аналитика' },
     { url: '/history', name: 'История' },
     { url: '/order', name: 'Добавить заказ' },
