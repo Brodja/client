@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { MaterialService } from '../shared/classes/material.service';
 import { AuthService } from '../shared/services/auth.service';
 
 @Component({
@@ -13,7 +14,11 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   aSub!: Subscription;
 
-  constructor(private auth: AuthService, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
   ngOnDestroy(): void {
     if (this.aSub) this.aSub.unsubscribe();
   }
@@ -26,12 +31,11 @@ export class LoginPageComponent implements OnInit, OnDestroy {
 
     this.route.queryParams.subscribe((params: Params) => {
       if (params['registered']) {
-        console.log('registered');
-        //
+        MaterialService.toast('Тепер можна зайти в ситему використовуючи свої дані');
       } else if (params['accessDenied']) {
-        //
+        MaterialService.toast('Для початку авторизуйтесь');
       }
-    })
+    });
   }
 
   onSubmit() {
@@ -45,7 +49,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
         // this.router.navigate(['/overview'])
       },
       (error) => {
-        console.warn(error);
+        MaterialService.toast(error.error.message);
         this.form.enable();
       }
     );
