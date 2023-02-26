@@ -1,8 +1,10 @@
 <div class="row" *ngIf="gameList$ | async as gamesList; else loader">
   <div class="col s12">
     <div class="collection" *ngIf="gamesList.length !== 0; else empty">
-      <a *ngFor="let game of gamesList" href="#!" class="collection-item">
-        {{ game }}</a
+      <a *ngFor="let gameName of gamesList" 
+      [routerLink]="['/games', gameName]" 
+      class="collection-item">
+        {{ gameName }}</a
       >
     </div>
     <ng-template #empty>
