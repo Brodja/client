@@ -13,6 +13,7 @@ import { TokenInterceptor } from './shared/classes/token.interceptor';
 import { OverviewPageComponent } from './overview-page/overview-page.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { GamesPageComponent } from './games-page/games-page.component';
+import { LoaderComponent } from './shared/components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { GamesPageComponent } from './games-page/games-page.component';
     RegisterPageComponent,
     OverviewPageComponent,
     ProfilePageComponent,
-    GamesPageComponent
+    GamesPageComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,16 @@
-<p>games-page works!</p>
+<div class="row" *ngIf="gameList$ | async as gamesList; else loader">
+  <div class="col s12">
+    <div class="collection" *ngIf="gamesList.length !== 0; else empty">
+      <a *ngFor="let game of gamesList" href="#!" class="collection-item">
+        {{ game }}</a
+      >
+    </div>
+    <ng-template #empty>
+      <div class="center">Game center empty</div>
+    </ng-template>
+  </div>
+</div>
+
+<ng-template #loader>
+  <app-loader></app-loader>
+</ng-template>

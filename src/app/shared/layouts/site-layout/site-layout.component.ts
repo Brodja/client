@@ -12,10 +12,6 @@ export class SiteLayoutComponent {
     { url: '/overview', name: 'Overview' },
     { url: '/profile', name: 'Profile' },
     { url: '/games', name: 'Games' },
-    { url: '/analytics', name: 'Аналитика' },
-    { url: '/history', name: 'История' },
-    { url: '/order', name: 'Добавить заказ' },
-    { url: '/categories', name: 'Ассортимент' },
   ];
 
   constructor(private auth: AuthService, private router: Router) {}
