@@ -12,6 +12,7 @@ export class SiteLayoutComponent {
     { url: '/overview', name: 'Overview' },
     { url: '/profile', name: 'Profile' },
     { url: '/games', name: 'Games' },
+    { url: '/rooms', name: 'Rooms' },
   ];
 
   constructor(private auth: AuthService, private router: Router) {}

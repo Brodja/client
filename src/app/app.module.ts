@@ -14,6 +14,8 @@ import { OverviewPageComponent } from './overview-page/overview-page.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { GamesPageComponent } from './games-page/games-page.component';
 import { LoaderComponent } from './shared/components/loader/loader.component';
+import { RoomsPageComponent } from './rooms-page/rooms-page.component';
+import { RoomsFormComponent } from './rooms-page/rooms-form/rooms-form.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,9 @@ import { LoaderComponent } from './shared/components/loader/loader.component';
     OverviewPageComponent,
     ProfilePageComponent,
     GamesPageComponent,
-    LoaderComponent
+    LoaderComponent,
+    RoomsPageComponent,
+    RoomsFormComponent
   ],
   imports: [
     BrowserModule,
