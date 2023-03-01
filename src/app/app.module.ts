@@ -16,6 +16,7 @@ import { GamesPageComponent } from './games-page/games-page.component';
 import { LoaderComponent } from './shared/components/loader/loader.component';
 import { RoomsPageComponent } from './rooms-page/rooms-page.component';
 import { RoomsFormComponent } from './rooms-page/rooms-form/rooms-form.component';
+import { DeskPageShComponent } from './desk-page-sh/desk-page-sh.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { RoomsFormComponent } from './rooms-page/rooms-form/rooms-form.component
     GamesPageComponent,
     LoaderComponent,
     RoomsPageComponent,
-    RoomsFormComponent
+    RoomsFormComponent,
+    DeskPageShComponent
   ],
   imports: [
     BrowserModule,

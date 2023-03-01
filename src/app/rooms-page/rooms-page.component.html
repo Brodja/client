@@ -11,11 +11,24 @@
 <div class="row" *ngIf="roomList$ | async as roomList; else loader">
   <div class="col s12">
     <div class="collection" *ngIf="roomList.length !== 0; else empty">
+      <div *ngFor="let roomName of roomList" class="collection-item dflex">
+        <a 
+        [routerLink]="['/desk', roomName.id]" 
+        class="collection-item w100">
+          {{ roomName.name }}</a
+        >
+        <button class="btn btn-small blue" [routerLink]="['/rooms', roomName.id]">
+          <i  class="material-icons">edit</i>
+        </button>
+        
+      </div>
+
+<!-- 
       <a *ngFor="let roomName of roomList" 
       [routerLink]="['/rooms', roomName.id]" 
       class="collection-item">
         {{ roomName.name }}</a
-      >
+      > -->
     </div>
     <ng-template #empty>
       <div class="center">Rooom center empty</div>

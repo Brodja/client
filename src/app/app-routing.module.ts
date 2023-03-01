@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { DeskPageShComponent } from './desk-page-sh/desk-page-sh.component';
 import { GamesPageComponent } from './games-page/games-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { OverviewPageComponent } from './overview-page/overview-page.component';
@@ -32,6 +33,7 @@ const routes: Routes = [
       { path: 'rooms', component: RoomsPageComponent },
       { path: 'rooms/new', component: RoomsFormComponent },
       { path: 'rooms/:id', component: RoomsFormComponent },
+      { path: 'desk/:id', component: DeskPageShComponent },
     ],
   },
 ];
