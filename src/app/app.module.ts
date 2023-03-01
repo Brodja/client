@@ -17,6 +17,14 @@ import { LoaderComponent } from './shared/components/loader/loader.component';
 import { RoomsPageComponent } from './rooms-page/rooms-page.component';
 import { RoomsFormComponent } from './rooms-page/rooms-form/rooms-form.component';
 import { DeskPageShComponent } from './desk-page-sh/desk-page-sh.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+
+const config: SocketIoConfig = {
+	url: 'http://localhost:3000', // socket server url;
+	options: {
+		transports: ['websocket']
+	}
+}
 
 @NgModule({
   declarations: [
@@ -39,6 +47,7 @@ import { DeskPageShComponent } from './desk-page-sh/desk-page-sh.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    SocketIoModule.forRoot(config),
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
