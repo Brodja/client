@@ -19,6 +19,7 @@ export class SocketService {
 
   sendTest() {
     this.socket.emit('msgToServer');
+    this.socket.emit('test2');
   }
 
   onSendTest() {

@@ -12,9 +12,9 @@ export class DeskPageShComponent implements OnInit {
 
   ngOnInit(): void {
     this.socketService.sendTest();
-    this.socketService.onSendTest().subscribe((data: any) => {
-      this.data = data
-      console.log('data', data);
-    })
+    // this.socketService.onSendTest().subscribe((data: any) => {
+    //   this.data = data
+    //   console.log('data', data);
+    // })
   }
 }
