@@ -1,0 +1,66 @@
+<div class="page-title">
+  <h4>
+    <a routerLink="/rooms">Кімнати</a>
+    <i class="material-icons">keyboard_arrow_right</i>
+    Створення кімнати
+  </h4>
+</div>
+
+<div class="row">
+  <form class="col s12 l6" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="input-field">
+      <input
+        formControlName="name"
+        id="name"
+        type="text"
+        [ngClass]="{
+          invalid: form.get('name')!.invalid && form.get('name')!.touched
+        }"
+      />
+      <label for="name">Назва</label>
+      <span
+        class="helper-text red-text"
+        *ngIf="form.get('name')!.invalid && form.get('name')!.touched"
+      >
+        <span *ngIf="form.get('name')!.errors!['required']">
+          Не може бути пустим.
+        </span>
+      </span>
+    </div>
+    <div class="input-field">
+      <input
+        formControlName="password"
+        id="password"
+        type="text"
+        [ngClass]="{
+          invalid:
+            form.get('password')!.invalid && form.get('password')!.touched
+        }"
+      />
+      <label for="password">Пароль</label>
+      <span
+        class="helper-text red-text"
+        *ngIf="form.get('password')!.invalid && form.get('password')!.touched"
+      >
+        <span
+          *ngIf="form.get('password')?.errors?.['minlength'] && form.get('password')?.errors?.['minlength']['requiredLength']"
+        >
+          Пароль повинен не менше
+          {{form.get('password')?.errors?.['minlength']['requiredLength']}}
+          символів. Зараз
+          {{form.get('password')?.errors?.['minlength']['actualLength']}}
+        </span>
+      </span>
+    </div>
+
+    <div>
+      <button
+        type="submit"
+        [disabled]="form.invalid || form.disabled"
+        class="waves-effect waves-light btn"
+      >
+        Створити
+      </button>
+    </div>
+  </form>
+</div>

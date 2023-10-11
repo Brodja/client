@@ -1,37 +1,28 @@
 <div class="page-title">
-  <h4>Rooms</h4>
+  <h4>Кімнати</h4>
   <button
     class="waves-effect waves-light btn grey darken-1"
     routerLink="/rooms/new"
   >
-    Add room
+    Створити кімнату
   </button>
 </div>
 
 <div class="row" *ngIf="roomList$ | async as roomList; else loader">
   <div class="col s12">
     <div class="collection" *ngIf="roomList.length !== 0; else empty">
-      <div *ngFor="let roomName of roomList" class="collection-item dflex">
-        <a 
-        [routerLink]="['/desk', roomName.id]" 
-        class="collection-item w100">
-          {{ roomName.name }}</a
+      <div *ngFor="let roomName of roomList" class="collection-item dflex ">
+        <a class="col s9"> {{ roomName.name }}</a>
+        <button
+          class="btn btn-small blue"
+          [routerLink]="['/rooms', roomName.id]"
         >
-        <button class="btn btn-small blue" [routerLink]="['/rooms', roomName.id]">
-          <i  class="material-icons">edit</i>
+          <i class="material-icons">Приєднатися</i>
         </button>
-        
       </div>
-
-<!-- 
-      <a *ngFor="let roomName of roomList" 
-      [routerLink]="['/rooms', roomName.id]" 
-      class="collection-item">
-        {{ roomName.name }}</a
-      > -->
     </div>
     <ng-template #empty>
-      <div class="center">Rooom center empty</div>
+      <div class="center">Кімнат немає</div>
     </ng-template>
   </div>
 </div>

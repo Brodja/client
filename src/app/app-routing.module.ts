@@ -4,13 +4,14 @@ import { DeskPageShComponent } from './desk-page-sh/desk-page-sh.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
-import { RoomsFormComponent } from './rooms-page/rooms-form/rooms-form.component';
 import { RoomsPageComponent } from './rooms-page/rooms-page.component';
 import { AuthGuard } from './shared/classes/auth.guard';
 import { AuthLayoutComponent } from './shared/layouts/auth-layout/auth-layout.component';
 import { SiteLayoutComponent } from './shared/layouts/site-layout/site-layout.component';
 import { NewsPageComponent } from './news-page/news-page.component';
 import { StatisticsPageComponent } from './statistics-page/statistics-page.component';
+import { RoomsNewComponent } from './rooms-page/rooms-new/rooms-new.component';
+import { RoomsJoinComponent } from './rooms-page/rooms-join/rooms-join.component';
 
 const routes: Routes = [
   {
@@ -31,9 +32,8 @@ const routes: Routes = [
       { path: 'profile', component: ProfilePageComponent },
       { path: 'statistics', component: StatisticsPageComponent },
       { path: 'rooms', component: RoomsPageComponent },
-      { path: 'rooms/new', component: RoomsFormComponent },
-      { path: 'rooms/:id', component: RoomsFormComponent },
-      { path: 'desk/:id', component: DeskPageShComponent },
+      { path: 'rooms/new', component: RoomsNewComponent },
+      { path: 'rooms/:id', component: RoomsJoinComponent },
     ],
   },
 ];
