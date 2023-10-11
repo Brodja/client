@@ -9,10 +9,10 @@ import { AuthService } from '../../services/auth.service';
 })
 export class SiteLayoutComponent {
   links = [
-    { url: '/overview', name: 'Overview' },
-    { url: '/profile', name: 'Profile' },
-    { url: '/games', name: 'Games' },
-    { url: '/rooms', name: 'Rooms' },
+    { url: '/news', name: 'Новини' },
+    { url: '/profile', name: 'Профіль' },
+    { url: '/statistics', name: 'Статистика' },
+    { url: '/rooms', name: 'Кімнати' },
   ];
 
   constructor(private auth: AuthService, private router: Router) {}

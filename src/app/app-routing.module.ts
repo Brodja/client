@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DeskPageShComponent } from './desk-page-sh/desk-page-sh.component';
-import { GamesPageComponent } from './games-page/games-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
-import { OverviewPageComponent } from './overview-page/overview-page.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { RoomsFormComponent } from './rooms-page/rooms-form/rooms-form.component';
@@ -11,6 +9,8 @@ import { RoomsPageComponent } from './rooms-page/rooms-page.component';
 import { AuthGuard } from './shared/classes/auth.guard';
 import { AuthLayoutComponent } from './shared/layouts/auth-layout/auth-layout.component';
 import { SiteLayoutComponent } from './shared/layouts/site-layout/site-layout.component';
+import { NewsPageComponent } from './news-page/news-page.component';
+import { StatisticsPageComponent } from './statistics-page/statistics-page.component';
 
 const routes: Routes = [
   {
@@ -27,9 +27,9 @@ const routes: Routes = [
     component: SiteLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'overview', component: OverviewPageComponent },
+      { path: 'news', component: NewsPageComponent },
       { path: 'profile', component: ProfilePageComponent },
-      { path: 'games', component: GamesPageComponent },
+      { path: 'statistics', component: StatisticsPageComponent },
       { path: 'rooms', component: RoomsPageComponent },
       { path: 'rooms/new', component: RoomsFormComponent },
       { path: 'rooms/:id', component: RoomsFormComponent },
