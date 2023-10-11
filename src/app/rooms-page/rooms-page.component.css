@@ -1,0 +1,12 @@
+.room {
+  display: flex;
+  /* justify-content: space-around; */
+  align-items: center;
+}
+
+.input-room-password {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100px;
+}

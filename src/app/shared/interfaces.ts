@@ -4,11 +4,6 @@ export interface User {
   password: string;
 }
 
-export interface Room {
-  id: string;
-  name: string;
-}
-
 export interface Message {
   message: string;
 }

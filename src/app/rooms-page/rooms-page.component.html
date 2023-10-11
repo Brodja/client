@@ -11,14 +11,24 @@
 <div class="row" *ngIf="roomList$ | async as roomList; else loader">
   <div class="col s12">
     <div class="collection" *ngIf="roomList.length !== 0; else empty">
-      <div *ngFor="let roomName of roomList" class="collection-item dflex ">
-        <a class="col s9"> {{ roomName.name }}</a>
-        <button
-          class="btn btn-small blue"
-          [routerLink]="['/rooms', roomName.id]"
+      <div *ngFor="let room of roomList" class="collection-item room">
+        <span class="col s4"> {{ room.name }}</span>
+
+        <span class="col s4"> Гравців {{ room.users.length }}</span>
+        <form
+          class="input-room-password s4"
+          [formGroup]="form"
+          (ngSubmit)="onSubmit(room)"
         >
-          <i class="material-icons">Приєднатися</i>
-        </button>
+          <input formControlName="password" placeholder="Password" type="text" *ngIf="room.password" />
+          <button
+            class="btn btn-small blue"
+            type="submit"
+            [disabled]="form.invalid || form.disabled"
+          >
+            <i class="material-icons">Приєднатися</i>
+          </button>
+        </form>
       </div>
     </div>
     <ng-template #empty>
