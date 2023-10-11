@@ -13,7 +13,7 @@ import { AuthService } from '../shared/services/auth.service';
 export class RegisterPageComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   aSub!: Subscription;
-  
+
   constructor(private auth: AuthService, private router: Router) {}
   ngOnDestroy(): void {
     if (this.aSub) this.aSub.unsubscribe();
@@ -23,7 +23,10 @@ export class RegisterPageComponent implements OnInit, OnDestroy {
     this.form = new FormGroup({
       login: new FormControl(null, [Validators.required]),
       email: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, [Validators.required]),
+      password: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(3),
+      ]),
     });
   }
 
