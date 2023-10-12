@@ -1,28 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Socket } from 'ngx-socket-io';
+import { AuthService } from './auth.service';
+import * as io from 'socket.io-client';
+import { Socket } from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SocketService {
-  constructor(private socket: Socket) {}
+  socket: Socket;
+  constructor(private authService: AuthService) {
+    const token = authService.getToken();
+    this.socket = io.connect('http://localhost:3000', { auth: { token } });
+  }
 
   // emit event
   fetchMovies() {
     this.socket.emit('fetchMovies');
   }
 
-  // listen event
-  onFetchMovies() {
-    return this.socket.fromEvent('fetchMovies');
-  }
-
   sendTest() {
     this.socket.emit('msgToServer');
-    this.socket.emit('test2');
-  }
-
-  onSendTest() {
-    return this.socket.fromEvent('msgToClient');
   }
 }

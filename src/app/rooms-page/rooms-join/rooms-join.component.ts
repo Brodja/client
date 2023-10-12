@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SocketService } from 'src/app/shared/services/socket.service';
 
 @Component({
   selector: 'app-rooms-join',
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./rooms-join.component.css'],
 })
 export class RoomsJoinComponent {
-  // to init connect
+  constructor(private socketService: SocketService) {}
+
+  ngOnInit(): void {
+    this.socketService.sendTest();
+  }
 }

@@ -17,7 +17,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {}
   ngOnDestroy(): void {
     if (this.aSub) this.aSub.unsubscribe();
