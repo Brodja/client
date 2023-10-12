@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DeskPageShComponent } from './desk-page-sh/desk-page-sh.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { RegisterPageComponent } from './register-page/register-page.component';

@@ -13,14 +13,12 @@ import { TokenInterceptor } from './shared/classes/token.interceptor';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { LoaderComponent } from './shared/components/loader/loader.component';
 import { RoomsPageComponent } from './rooms-page/rooms-page.component';
-import { DeskPageShComponent } from './desk-page-sh/desk-page-sh.component';
 import { NewsPageComponent } from './news-page/news-page.component';
 import { StatisticsPageComponent } from './statistics-page/statistics-page.component';
 import { RoomsNewComponent } from './rooms-page/rooms-new/rooms-new.component';
 import { RoomsJoinComponent } from './rooms-page/rooms-join/rooms-join.component';
 import { RoomsSettingsComponent } from './rooms-page/rooms-join/rooms-settings/rooms-settings.component';
 import { RoomsUsersComponent } from './rooms-page/rooms-join/rooms-users/rooms-users.component';
-
 
 @NgModule({
   declarations: [
@@ -32,7 +30,6 @@ import { RoomsUsersComponent } from './rooms-page/rooms-join/rooms-users/rooms-u
     ProfilePageComponent,
     LoaderComponent,
     RoomsPageComponent,
-    DeskPageShComponent,
     NewsPageComponent,
     StatisticsPageComponent,
     RoomsNewComponent,
