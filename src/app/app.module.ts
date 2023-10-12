@@ -19,6 +19,8 @@ import { NewsPageComponent } from './news-page/news-page.component';
 import { StatisticsPageComponent } from './statistics-page/statistics-page.component';
 import { RoomsNewComponent } from './rooms-page/rooms-new/rooms-new.component';
 import { RoomsJoinComponent } from './rooms-page/rooms-join/rooms-join.component';
+import { RoomsSettingsComponent } from './rooms-page/rooms-join/rooms-settings/rooms-settings.component';
+import { RoomsUsersComponent } from './rooms-page/rooms-join/rooms-users/rooms-users.component';
 
 const config: SocketIoConfig = {
   url: 'http://localhost:3000', // socket server url;
@@ -42,6 +44,8 @@ const config: SocketIoConfig = {
     StatisticsPageComponent,
     RoomsNewComponent,
     RoomsJoinComponent,
+    RoomsSettingsComponent,
+    RoomsUsersComponent,
   ],
   imports: [
     BrowserModule,

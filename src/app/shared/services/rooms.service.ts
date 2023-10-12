@@ -20,11 +20,7 @@ export class RoomsService {
     return this.http.get<BackRoom>(`/api/rooms/${id}`);
   }
 
-  update(id: string, name: string): Observable<BackRoom> {
-    return this.http.patch<BackRoom>(`/api/rooms/${id}`, { name });
-  }
-
-  delete(id: string): Observable<Message> {
-    return this.http.delete<Message>(`/api/rooms/${id}`);
+  connect(config: any): Observable<BackRoom> {
+    return this.http.post<BackRoom>(`/api/rooms/connect`, config);
   }
 }
