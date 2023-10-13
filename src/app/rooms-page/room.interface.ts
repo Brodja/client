@@ -1,3 +1,5 @@
+import { BackUser } from "../shared/interfaces";
+
 export interface ClientRoom {
   name: string;
   password: string;
@@ -9,5 +11,5 @@ export interface BackRoom {
 	password: string | null;
 	dateCreate: number;
 	initiatorId: string;
-	users: any[];
+	users: BackUser[];
 }

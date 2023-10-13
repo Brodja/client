@@ -18,7 +18,7 @@ import { StatisticsPageComponent } from './statistics-page/statistics-page.compo
 import { RoomsNewComponent } from './rooms-page/rooms-new/rooms-new.component';
 import { RoomsJoinComponent } from './rooms-page/rooms-join/rooms-join.component';
 import { RoomsSettingsComponent } from './rooms-page/rooms-join/rooms-settings/rooms-settings.component';
-import { RoomsUsersComponent } from './rooms-page/rooms-join/rooms-users/rooms-users.component';
+import { RoomsUserItemComponent } from './rooms-page/rooms-join/rooms-user-item/rooms-user-item.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +35,7 @@ import { RoomsUsersComponent } from './rooms-page/rooms-join/rooms-users/rooms-u
     RoomsNewComponent,
     RoomsJoinComponent,
     RoomsSettingsComponent,
-    RoomsUsersComponent,
+    RoomsUserItemComponent,
   ],
   imports: [
     BrowserModule,

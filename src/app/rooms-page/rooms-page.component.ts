@@ -5,6 +5,8 @@ import { BackRoom } from './room.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MaterialService } from '../shared/classes/material.service';
+import { AuthService } from '../shared/services/auth.service';
+import { BackUser } from '../shared/interfaces';
 
 @Component({
   selector: 'app-rooms-page',
@@ -14,10 +16,26 @@ import { MaterialService } from '../shared/classes/material.service';
 export class RoomsPageComponent implements OnInit {
   roomList$: Observable<BackRoom[]> | undefined;
   form!: FormGroup;
+  user: BackUser | undefined;
 
-  constructor(private rooms: RoomsService, private router: Router) {}
+  constructor(
+    private rooms: RoomsService,
+    private router: Router,
+    private authService: AuthService
+  ) {
+    // this.user = this.authService.getUser();
+  }
 
   ngOnInit(): void {
+    this.authService.initUser().subscribe(
+      (user) => {
+        this.user = user;
+        this.authService.setUser(user);
+      },
+      (error) => {
+        MaterialService.toast(error.error.message);
+      }
+    );
     this.roomList$ = this.rooms.getAll();
 
     this.form = new FormGroup({
@@ -30,7 +48,9 @@ export class RoomsPageComponent implements OnInit {
     const password: string = this.form.value.password;
     if (!room.password || room.password === password) {
       this.form.enable();
-      this.router.navigate([`/rooms/${room.id}`]);
+      this.router.navigate([`/rooms/${room.id}`], {
+        state: { roomId: room.id },
+      });
     } else {
       this.form.enable();
       MaterialService.toast('Невірний пароль від кімнати');

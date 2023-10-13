@@ -24,7 +24,7 @@
           <button
             class="btn btn-small blue"
             type="submit"
-            [disabled]="form.invalid || form.disabled"
+            [disabled]="form.invalid || form.disabled || user?.currentRoom"
           >
             <i class="material-icons">Приєднатися</i>
           </button>
