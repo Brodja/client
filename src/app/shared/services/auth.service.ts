@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { User } from '../interfaces';
+import { BackUser, User } from '../interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private token: string = '';
+  private user: BackUser | null = null;
   constructor(private http: HttpClient) {}
 
   register(user: User): Observable<User> {
@@ -13,10 +14,11 @@ export class AuthService {
   }
 
   login(user: User): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>('/api/auth/login', user).pipe(
-      tap(({ token }) => {
+    return this.http.post<{ token: string, user: BackUser }>('/api/auth/login', user).pipe(
+      tap(({ token, user }) => {
         localStorage.setItem('auth-token', token);
         this.setToken(token);
+        this.setUser(user);
       })
     );
   }
@@ -27,6 +29,14 @@ export class AuthService {
 
   getToken(): string {
     return this.token;
+  }
+
+  setUser(user: BackUser): void {
+    this.user = user;
+  }
+
+  getUser(): BackUser {
+    return <BackUser>this.user;
   }
 
   isAuthenticated(): boolean {
