@@ -30,12 +30,12 @@ export class RoomsNewComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    let obs$;
+    let aSub$;
     this.form.disable();
     const newRoom: ClientRoom = this.form.value;
-    obs$ = this.roomsService.create(newRoom);
+    aSub$ = this.roomsService.create(newRoom);
 
-    obs$.subscribe(
+    aSub$.subscribe(
       (room: BackRoom) => {
         this.room = room;
         MaterialService.toast('Кімната створена');
@@ -48,15 +48,4 @@ export class RoomsNewComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-  // deleteRoom() {
-  //   const decision = window.confirm(`Remove room - "${this.room.name}"`);
-  //   if (decision) {
-  //     this.roomsService.delete(this.room.id).subscribe(
-  //       (response) => MaterialService.toast(response.message),
-  //       (error) => MaterialService.toast(error.error.message),
-  //       () => this.router.navigate(['/rooms'])
-  //     );
-  //   }
-  // }
 }

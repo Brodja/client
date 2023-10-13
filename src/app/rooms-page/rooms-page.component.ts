@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { RoomsService } from '../shared/services/rooms.service';
 import { BackRoom } from './room.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MaterialService } from '../shared/classes/material.service';
-import { AuthService } from '../shared/services/auth.service';
 import { BackUser } from '../shared/interfaces';
 import { SocketService } from '../shared/services/socket.service';
 
@@ -14,31 +13,37 @@ import { SocketService } from '../shared/services/socket.service';
   templateUrl: './rooms-page.component.html',
   styleUrls: ['./rooms-page.component.css'],
 })
-export class RoomsPageComponent implements OnInit {
-  roomList$: Observable<BackRoom[]> | undefined;
+export class RoomsPageComponent implements OnInit, OnDestroy {
+  roomList: BackRoom[] | undefined;
   form!: FormGroup;
   user: BackUser | undefined;
+  rSub!: Subscription;
+  urSub!: Subscription;
 
   constructor(
     private rooms: RoomsService,
     private router: Router,
-    private authService: AuthService,
-    private socketService: SocketService,
-  ) {
-    // this.user = this.authService.getUser();
+    private socketService: SocketService
+  ) {}
+
+  ngOnDestroy() {
+    if (this.rSub) this.rSub.unsubscribe();
+    if (this.urSub) this.urSub.unsubscribe();
   }
 
   ngOnInit(): void {
-    this.authService.initUser().subscribe(
-      (user) => {
-        this.user = user;
-        this.authService.setUser(user);
+    this.rSub = this.rooms.getAll().subscribe(
+      (rooms: BackRoom[]) => {
+        this.roomList = rooms;
       },
       (error) => {
         MaterialService.toast(error.error.message);
       }
     );
-    this.roomList$ = this.rooms.getAll();
+
+    this.urSub = this.socketService.updateRoomsList().subscribe((rooms) => {
+      this.roomList = rooms;
+    });
 
     this.form = new FormGroup({
       password: new FormControl(null, [Validators.minLength(4)]),

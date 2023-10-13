@@ -9,7 +9,7 @@
   </button>
 </div>
 
-<div class="row" *ngIf="roomList$ | async as roomList; else loader">
+<div class="row" *ngIf="roomList; else loader">
   <div class="col s12">
     <div class="collection" *ngIf="roomList.length !== 0; else empty">
       <div *ngFor="let room of roomList" class="collection-item room">
