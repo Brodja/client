@@ -9,14 +9,24 @@
     </button>
   </div>
 
-  <div class="users">
-    <div class="user_in_room" *ngFor="let user of room.users">
-      <span> {{ user.login }}</span>
+  <div class="users user_list">
+    <div class="user_in_room user" *ngFor="let user of room.users">
+      <div class="user_media">
+        <div class="media_content">
+          <div class="camera" id="camera_{}">
+            <video autoPlay={true} playsInline={true} class="video" id="video_${user.id}">Video stream not available.</video>
+          </div>
+        </div>
+      </div>
+      <div class="user_name" id="user_name_${user.id}">{{ user.login }}</div>
+      <div class="user_status">Статус: <span class="user_status_text" id="user_status_${user.id}">gameStatus</span></div>
+      <div class="user_vote">Голос: <span class="user_vote_text" id="user_vote_${user.id}">lastVote</span></div>
     </div>
   </div>
 
   <app-rooms-settings> </app-rooms-settings>
 </div>
+
 
 <ng-template #loader>
   <app-loader></app-loader>

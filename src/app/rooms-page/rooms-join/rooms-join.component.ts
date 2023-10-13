@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MaterialService } from 'src/app/shared/classes/material.service';
 import { BackUser, User } from 'src/app/shared/interfaces';
@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './rooms-join.component.html',
   styleUrls: ['./rooms-join.component.css'],
 })
-export class RoomsJoinComponent implements OnInit, OnDestroy {
+export class RoomsJoinComponent implements OnInit, OnDestroy, AfterViewInit {
   pSub!: Subscription;
   rSub!: Subscription;
   urSub!: Subscription;
@@ -27,7 +27,7 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private socketService: SocketService,
     private roomsService: RoomsService,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnDestroy() {
@@ -73,7 +73,37 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
     this.urSub = this.socketService.updateRoom().subscribe((room) => {
       this.room = room;
     });
+
+    // this.recordAudio = () => {
+    //   return new Promise((resolve) => {
+    //     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    //       console.log(stream);
+    //     })
+    //   })
+    // }
+
+    // navigator.mediaDevices
+    //   .getUserMedia({
+    //     video: {
+    //       width: {
+    //         min: 320,
+    //         ideal: 640,
+    //         max: 1024,
+    //       },
+    //       height: {
+    //         min: 240,
+    //         ideal: 480,
+    //         max: 600,
+    //       },
+    //     },
+    //     audio: true,
+    //   })
+    //   .then((stream) => console.log(stream))
+    //   .catch((err) => console.error(err));
+    // console.log(' this.localMediaStream', this.localMediaStream);
   }
+
+  ngAfterViewInit() {}
 
   leaveRoom() {
     this.roomsService

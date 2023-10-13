@@ -14,7 +14,7 @@ export class SocketService {
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
   constructor(private authService: AuthService) {
     const token = authService.getToken();
-    this.socket = io.connect('http://localhost:3000', { auth: { token } });
+    this.socket = io.connect('https://localhost:3000', { auth: { token } });
   }
   // Зміни списку кімнат
   updateRoomsList(): Observable<BackRoom[]> {
