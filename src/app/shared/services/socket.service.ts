@@ -16,11 +16,19 @@ export class SocketService {
     const token = authService.getToken();
     this.socket = io.connect('http://localhost:3000', { auth: { token } });
   }
-
+  // Зміни списку кімнат
   updateRoomsList(): Observable<BackRoom[]> {
     return new Observable((subscribe) => {
       this.socket.on('updateRoomsList', (rooms) => {
         subscribe.next(rooms);
+      });
+    });
+  }
+  // Зміна кімнати
+  updateRoom(): Observable<BackRoom> {
+    return new Observable((subscribe) => {
+      this.socket.on('updateRoom', (room) => {
+        subscribe.next(room);
       });
     });
   }

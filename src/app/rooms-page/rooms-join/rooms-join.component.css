@@ -3,3 +3,9 @@
   height: 500px;
   background-color: rgb(179, 223, 223);
 }
+
+.user_in_room{
+  width: 60px;
+  height: 60px;
+  background-color: rgb(83, 92, 92);
+}

@@ -55,9 +55,7 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
     const password: string = this.form.value.password;
     if (!room.password || room.password === password) {
       this.form.enable();
-      this.router.navigate([`/rooms/${room.id}`], {
-        state: { roomId: room.id },
-      });
+      this.router.navigate([`/rooms/${room.id}`]);
     } else {
       this.form.enable();
       MaterialService.toast('Невірний пароль від кімнати');

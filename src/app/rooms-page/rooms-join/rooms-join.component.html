@@ -1,13 +1,23 @@
-<div class="page-title">
-  <h4>Кімнатa</h4>
-  <button
-  (click)="leaveRoom()"
-    class="waves-effect waves-light btn red darken-1"
-  >
-    Покинути кімнату
-  </button>
+<div *ngIf="room; else loader">
+  <div class="page-title">
+    <h4>Назва кімнати: {{ room.name || "Error" }}</h4>
+    <button
+      (click)="leaveRoom()"
+      class="waves-effect waves-light btn red darken-1"
+    >
+      Покинути кімнату
+    </button>
+  </div>
+
+  <div class="users">
+    <div class="user_in_room" *ngFor="let user of room.users">
+      <span> {{ user.login }}</span>
+    </div>
+  </div>
+
+  <app-rooms-settings> </app-rooms-settings>
 </div>
 
-<div class="users">asda {{ roomId }}</div>
-
-<app-rooms-settings> </app-rooms-settings>
+<ng-template #loader>
+  <app-loader></app-loader>
+</ng-template>

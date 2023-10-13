@@ -20,8 +20,8 @@ export class RoomsService {
     return this.http.get<BackRoom>(`/api/rooms/${id}`);
   }
 
-  join(roomId: string): Observable<void> {
-    return this.http.post<void>(`/api/rooms/join`, { roomId });
+  join(roomId: string): Observable<BackRoom> {
+    return this.http.post<BackRoom>(`/api/rooms/join`, { roomId });
   }
 
   connect(roomId: string): Observable<void> {
