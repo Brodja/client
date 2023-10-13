@@ -1,8 +1,9 @@
 <div class="page-title">
   <h4>Кімнати</h4>
   <button
-    class="waves-effect waves-light btn grey darken-1"
+    class="waves-effect waves-light btn salet darken-1"
     routerLink="/rooms/new"
+    [disabled]="user?.currentRoom"
   >
     Створити кімнату
   </button>
@@ -20,13 +21,26 @@
           [formGroup]="form"
           (ngSubmit)="onSubmit(room)"
         >
-          <input formControlName="password" placeholder="Password" type="text" *ngIf="room.password" />
+          <input
+            formControlName="password"
+            placeholder="Password"
+            type="text"
+            *ngIf="room.password"
+          />
           <button
             class="btn btn-small blue"
             type="submit"
-            [disabled]="form.invalid || form.disabled || user?.currentRoom"
+            [disabled]="
+              form.invalid || form.disabled || (user?.currentRoom && user?.currentRoom?.id !== room.id)
+            "
           >
-            <i class="material-icons">Приєднатися</i>
+            <i class="material-icons">
+              {{
+                user?.currentRoom?.id === room.id
+                  ? "Повернутися"
+                  : "Увійти"
+              }}</i
+            >
           </button>
         </form>
       </div>
@@ -36,7 +50,6 @@
     </ng-template>
   </div>
 </div>
-
 <ng-template #loader>
   <app-loader></app-loader>
 </ng-template>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MaterialService } from 'src/app/shared/classes/material.service';
 import { BackUser, User } from 'src/app/shared/interfaces';
 import { AuthService } from 'src/app/shared/services/auth.service';
@@ -13,22 +13,43 @@ import { SocketService } from 'src/app/shared/services/socket.service';
 })
 export class RoomsJoinComponent {
   users: BackUser[] | null = [];
+  roomId: string = '';
+
   constructor(
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private socketService: SocketService,
-    private roomsService: RoomsService
+    private roomsService: RoomsService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
-    console.log('INIT', this.activatedRoute.snapshot.params['id']);
-    this.roomsService.connect(this.activatedRoute.snapshot.params['id']).subscribe(
-      () => {
-        MaterialService.toast('Ви війшли в кімнату');
-      },
-      (error) => {
-        MaterialService.toast(error.error.message);
-      }
-    );
-  }
+    this.roomId = this.activatedRoute.snapshot.params['id'];
+    this.roomsService
+      .join(this.activatedRoute.snapshot.params['id'])
+      .subscribe(
+        () => {
+          MaterialService.toast('Ви війшли в кімнату');
+        },
+        (error) => {
+          MaterialService.toast(error.error.message);
+        }
+      );
+  
+    }
+
+    leaveRoom() {
+      this.roomsService
+      .leave(this.activatedRoute.snapshot.params['id'])
+      .subscribe(
+        () => {
+          this.router.navigate([`/rooms`])
+          MaterialService.toast('Ви покинули кімнату');
+        },
+        (error) => {
+          MaterialService.toast(error.error.message);
+        }
+      );
+    }
+
 }

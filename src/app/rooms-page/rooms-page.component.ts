@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { MaterialService } from '../shared/classes/material.service';
 import { AuthService } from '../shared/services/auth.service';
 import { BackUser } from '../shared/interfaces';
+import { SocketService } from '../shared/services/socket.service';
 
 @Component({
   selector: 'app-rooms-page',
@@ -21,7 +22,8 @@ export class RoomsPageComponent implements OnInit {
   constructor(
     private rooms: RoomsService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private socketService: SocketService,
   ) {
     // this.user = this.authService.getUser();
   }
