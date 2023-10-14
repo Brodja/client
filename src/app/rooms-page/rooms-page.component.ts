@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { MaterialService } from '../shared/classes/material.service';
 import { BackUser } from '../shared/interfaces';
 import { SocketService } from '../shared/services/socket.service';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-rooms-page',
@@ -19,19 +20,33 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
   user: BackUser | undefined;
   rSub!: Subscription;
   urSub!: Subscription;
+  uSub!: Subscription;
 
   constructor(
     private rooms: RoomsService,
     private router: Router,
-    private socketService: SocketService
-  ) {}
+    private socketService: SocketService,
+    private authService: AuthService,
+  ) {
+  }
 
   ngOnDestroy() {
     if (this.rSub) this.rSub.unsubscribe();
     if (this.urSub) this.urSub.unsubscribe();
+    if (this.uSub) this.uSub.unsubscribe();
   }
 
   ngOnInit(): void {
+    // this.user = this.authService.getUser();
+    this.uSub = this.authService.initUser().subscribe(
+      (user) => {
+        this.authService.setUser(user);
+        this.user = user
+      },
+      (error) => {
+        MaterialService.toast(error.error.message);
+      }
+    );
     this.rSub = this.rooms.getAll().subscribe(
       (rooms: BackRoom[]) => {
         this.roomList = rooms;

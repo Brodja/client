@@ -49,7 +49,15 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
         this.jrSub = this.roomsService.join(id).subscribe(
           (room) => {
             this.room = room;
-            setTimeout(async () => await this.initMyVideo(), 1000);
+            setTimeout(async () => {
+              await this.initMyVideo();
+              setTimeout(async () => {
+                for (const user of this.room.users) {
+                  if (user.id === this.authService.getUser().id) continue;
+                  await this.initOtherVideo(user);
+                }
+              }, 1000);
+            }, 1000);
             MaterialService.toast(`Ви війшли в кімнату "${this.room.name}"`);
           },
           (error) => MaterialService.toast(error.error.message)
@@ -83,9 +91,6 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
         this.room.users.find((u) => u.id === user.id)
       );
       userToUpdate.peerId = user.peerId;
-    }
-    for (const user of this.room.users) {
-      await this.initOtherVideo(user);
     }
   }
 
