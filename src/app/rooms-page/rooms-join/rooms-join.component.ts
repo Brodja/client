@@ -1,29 +1,33 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { MaterialService } from 'src/app/shared/classes/material.service';
 import { BackUser, User } from 'src/app/shared/interfaces';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { RoomsService } from 'src/app/shared/services/rooms.service';
 import { SocketService } from 'src/app/shared/services/socket.service';
 import { BackRoom } from '../room.interface';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription, map, switchMap } from 'rxjs';
+import { Peer } from 'peerjs';
 
 @Component({
   selector: 'app-rooms-join',
   templateUrl: './rooms-join.component.html',
   styleUrls: ['./rooms-join.component.css'],
 })
-export class RoomsJoinComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild('videoPlayer')
-  videoplayer!: ElementRef;
-
-  pSub!: Subscription;
-  rSub!: Subscription;
+export class RoomsJoinComponent implements OnInit, OnDestroy {
   urSub!: Subscription;
   jrSub!: Subscription;
-  users: BackUser[] | null = [];
-  room: BackRoom | null = null;
+  room!: BackRoom;
+  localVideo: any;
   localMediaStream: any;
+  peer: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -34,8 +38,6 @@ export class RoomsJoinComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {}
 
   ngOnDestroy() {
-    if (this.pSub) this.pSub.unsubscribe();
-    if (this.rSub) this.rSub.unsubscribe();
     if (this.urSub) this.urSub.unsubscribe();
     if (this.jrSub) this.jrSub.unsubscribe();
   }
@@ -44,47 +46,50 @@ export class RoomsJoinComponent implements OnInit, OnDestroy, AfterViewInit {
     // 1) Перевірка підключення до кімнати
     this.jrSub = this.activatedRoute.params.subscribe(
       ({ id }) => {
-        this.rSub = this.roomsService.join(id).subscribe(
-          (room) => {},
-          (error) => {
-            MaterialService.toast(error.error.message);
-          }
-        );
-      },
-      (error) => {
-        MaterialService.toast(error.error.message);
-      }
-    );
-    // 2) Отримання кімнати
-    this.pSub = this.activatedRoute.params.subscribe(
-      ({ id }) => {
-        this.rSub = this.roomsService.getById(id).subscribe(
+        this.jrSub = this.roomsService.join(id).subscribe(
           (room) => {
             this.room = room;
+            setTimeout(async () => await this.initMyVideo(), 1000);
             MaterialService.toast(`Ви війшли в кімнату "${this.room.name}"`);
           },
-          (error) => {
-            MaterialService.toast(error.error.message);
-          }
+          (error) => MaterialService.toast(error.error.message)
         );
       },
-      (error) => {
-        MaterialService.toast(error.error.message);
-      }
+      (error) => MaterialService.toast(error.error.message)
     );
-    // 3) Підписка на зміни кімнати
-    this.urSub = this.socketService.updateRoom().subscribe((room) => {
-      this.room = room;
+
+    // 2) Підписка на зміни кімнати
+    this.urSub = this.socketService.updateRoom().subscribe(async (obj) => {
+      await this.updateUsers(obj.room, obj.user);
     });
+  }
 
-    // this.recordAudio = () => {
-    //   return new Promise((resolve) => {
-    //     navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-    //       console.log(stream);
-    //     })
-    //   })
-    // }
+  async updateUsers(room: BackRoom, user: BackUser): Promise<void> {
+    if (user.id === this.authService.getUser().id) return;
+    // 1) Добавить Юзера
+    if (!this.room.users.find((u) => u.id === user.id)) {
+      this.room.users.push(user);
+    }
+    // 2) Удалить Юзера
+    else if (!room.users.find((u) => u.id === user.id)) {
+      this.room.users.splice(
+        this.room.users.findIndex((u) => u.id === user.id),
+        1
+      );
+    }
+    // 3) Обновить Юзера
+    else {
+      const userToUpdate = <BackUser>(
+        this.room.users.find((u) => u.id === user.id)
+      );
+      userToUpdate.peerId = user.peerId;
+    }
+    for (const user of this.room.users) {
+      await this.initOtherVideo(user);
+    }
+  }
 
+  async initMyVideo(): Promise<void> {
     this.localMediaStream = await navigator.mediaDevices.getUserMedia({
       video: {
         width: {
@@ -100,20 +105,41 @@ export class RoomsJoinComponent implements OnInit, OnDestroy, AfterViewInit {
       },
       audio: true,
     });
-    console.log('this.localMediaStream', this.localMediaStream);
-    this.videoplayer.nativeElement.muted = true;
-    this.videoplayer.nativeElement.srcObject = this.localMediaStream;
-    // localVideoElement?.muted = true;
-    // localVideoElement.srcObject = localMediaStream;
-    // this.videoplayer.nativeElement.onloadeddata = () => this.videoplayer.nativeElement.play();
-    // this.videoplayer.nativeElement.play();
+
+    const myId: string = this.authService.getUser().id.toString();
+
+    this.localVideo = this.getVideoByUserId(myId);
+    this.localVideo.muted = true;
+    this.localVideo.srcObject = this.localMediaStream;
+
+    this.peer = new Peer();
+    this.peer.on('open', (id: string) => {
+      this.socketService.sendPeerId(id);
+    });
+    this.peer.on('call', (call: any) => {
+      call.answer(this.localMediaStream);
+      call.on('stream', (stream: any) => {
+        const user = this.room?.users.find((u) => u.peerId === call.peer);
+        const video = this.getVideoByUserId(user?.id || '');
+        video.srcObject = stream;
+        video.onloadeddata = () => video.play();
+      });
+    });
   }
 
-  toggleVideo() {
-    this.videoplayer.nativeElement.play();
-}
+  async initOtherVideo(user: BackUser): Promise<void> {
+    const call = this.peer.call(user.peerId, this.localMediaStream);
+    call.on('stream', (stream: any) => {
+      const video = this.getVideoByUserId(user?.id || '');
+      video.srcObject = stream;
+      video.onloadeddata = () => video.play();
+    });
+  }
 
-  ngAfterViewInit() {}
+  getVideoByUserId(id: string): any {
+    const element = document.getElementById(id);
+    return element?.children[0].children[0];
+  }
 
   leaveRoom() {
     this.roomsService
@@ -123,9 +149,7 @@ export class RoomsJoinComponent implements OnInit, OnDestroy, AfterViewInit {
           this.router.navigate([`/rooms`]);
           MaterialService.toast(`Ви покинули в кімнату "${this.room?.name}"`);
         },
-        (error) => {
-          MaterialService.toast(error.error.message);
-        }
+        (error) => MaterialService.toast(error.error.message)
       );
   }
 }

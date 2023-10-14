@@ -25,12 +25,16 @@ export class SocketService {
     });
   }
   // Зміна кімнати
-  updateRoom(): Observable<BackRoom> {
+  updateRoom(): Observable<{ room: BackRoom; user: BackUser }> {
     return new Observable((subscribe) => {
-      this.socket.on('updateRoom', (room) => {
-        subscribe.next(room);
+      this.socket.on('updateRoom', (obj) => {
+        subscribe.next(obj);
       });
     });
+  }
+
+  sendPeerId(id: string): void {
+    this.socket.emit('sendPeerId', { id });
   }
 
   onGetUser(): Observable<BackUser> {
