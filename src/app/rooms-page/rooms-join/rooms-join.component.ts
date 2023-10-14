@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MaterialService } from 'src/app/shared/classes/material.service';
 import { BackUser, User } from 'src/app/shared/interfaces';
@@ -14,20 +14,23 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./rooms-join.component.css'],
 })
 export class RoomsJoinComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('videoPlayer')
+  videoplayer!: ElementRef;
+
   pSub!: Subscription;
   rSub!: Subscription;
   urSub!: Subscription;
   jrSub!: Subscription;
   users: BackUser[] | null = [];
   room: BackRoom | null = null;
-  roomId: string = '';
+  localMediaStream: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private socketService: SocketService,
     private roomsService: RoomsService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnDestroy() {
@@ -37,7 +40,7 @@ export class RoomsJoinComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.jrSub) this.jrSub.unsubscribe();
   }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     // 1) Перевірка підключення до кімнати
     this.jrSub = this.activatedRoute.params.subscribe(
       ({ id }) => {
@@ -82,26 +85,33 @@ export class RoomsJoinComponent implements OnInit, OnDestroy, AfterViewInit {
     //   })
     // }
 
-    // navigator.mediaDevices
-    //   .getUserMedia({
-    //     video: {
-    //       width: {
-    //         min: 320,
-    //         ideal: 640,
-    //         max: 1024,
-    //       },
-    //       height: {
-    //         min: 240,
-    //         ideal: 480,
-    //         max: 600,
-    //       },
-    //     },
-    //     audio: true,
-    //   })
-    //   .then((stream) => console.log(stream))
-    //   .catch((err) => console.error(err));
-    // console.log(' this.localMediaStream', this.localMediaStream);
+    this.localMediaStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        width: {
+          min: 320,
+          ideal: 640,
+          max: 1024,
+        },
+        height: {
+          min: 240,
+          ideal: 480,
+          max: 600,
+        },
+      },
+      audio: true,
+    });
+    console.log('this.localMediaStream', this.localMediaStream);
+    this.videoplayer.nativeElement.muted = true;
+    this.videoplayer.nativeElement.srcObject = this.localMediaStream;
+    // localVideoElement?.muted = true;
+    // localVideoElement.srcObject = localMediaStream;
+    // this.videoplayer.nativeElement.onloadeddata = () => this.videoplayer.nativeElement.play();
+    // this.videoplayer.nativeElement.play();
   }
+
+  toggleVideo() {
+    this.videoplayer.nativeElement.play();
+}
 
   ngAfterViewInit() {}
 
