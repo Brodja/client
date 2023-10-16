@@ -15,7 +15,7 @@ export class LoginPageComponent implements OnInit, OnDestroy {
   aSub!: Subscription;
 
   constructor(
-    private auth: AuthService,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
@@ -51,8 +51,9 @@ export class LoginPageComponent implements OnInit, OnDestroy {
       email: this.form.value.email,
       password: this.form.value.password,
     };
-    this.aSub = this.auth.login(user).subscribe(
-      () => {
+    this.aSub = this.authService.login(user).subscribe(
+      ({user}) => {
+        this.authService.setUser(user);
         this.router.navigate(['/news']);
       },
       (error) => {

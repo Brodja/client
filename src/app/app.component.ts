@@ -17,14 +17,16 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const potentialToken = localStorage.getItem('auth-token');
-    if (potentialToken) this.authService.setToken(potentialToken);
-    this.uSub = this.authService.initUser().subscribe(
-      (user) => {
-        this.authService.setUser(user);
-      },
-      (error) => {
-        MaterialService.toast(error.error.message);
-      }
-    );
+    if (potentialToken) {
+      this.authService.setToken(potentialToken);
+      this.uSub = this.authService.initUser().subscribe(
+        (user) => {
+          this.authService.setUser(user);
+        },
+        (error) => {
+          MaterialService.toast(error.error.message);
+        }
+      );
+    }
   }
 }

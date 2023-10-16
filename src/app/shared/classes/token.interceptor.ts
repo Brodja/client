@@ -34,6 +34,7 @@ export class TokenInterceptor implements HttpInterceptor {
   }
   private handleAuthError(error: HttpErrorResponse) {
     if (error.status === 401) {
+      this.auth.logout();
       this.router.navigate(['/login'], {
         queryParams: {
           sessionFailed: true,
