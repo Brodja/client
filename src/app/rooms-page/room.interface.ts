@@ -11,5 +11,11 @@ export interface BackRoom {
 	password: string | null;
 	dateCreate: number;
 	initiatorId: string;
-	users: BackUser[];
+	users: string[];
+}
+
+export enum RoomUserEvent {
+	join = 'join',
+	leave = 'leave',
+	update = 'update',
 }

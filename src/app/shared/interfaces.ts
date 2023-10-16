@@ -15,7 +15,8 @@ export interface BackUser {
   login: string;
   email: string;
   password: string;
-  currentRoom: BackRoom | null;
+  currentRoom: string | null;
   currentGame: BackRoom | null;
   peerId: string | null;
+  localCall: any | undefined;
 }

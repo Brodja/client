@@ -4,7 +4,7 @@ import * as io from 'socket.io-client';
 import { Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BackUser } from '../interfaces';
-import { BackRoom } from 'src/app/rooms-page/room.interface';
+import { BackRoom, RoomUserEvent } from 'src/app/rooms-page/room.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +16,7 @@ export class SocketService {
     const token = authService.getToken();
     this.socket = io.connect('https://localhost:3000', { auth: { token } });
   }
+
   // Зміни списку кімнат
   updateRoomsList(): Observable<BackRoom[]> {
     return new Observable((subscribe) => {
@@ -24,10 +25,15 @@ export class SocketService {
       });
     });
   }
-  // Зміна кімнати
-  updateRoom(): Observable<{ room: BackRoom; user: BackUser }> {
+
+  // Зміна юзерів кімнати
+  updateUserRoom(): Observable<{
+    room: BackRoom;
+    user: BackUser;
+    event: RoomUserEvent;
+  }> {
     return new Observable((subscribe) => {
-      this.socket.on('updateRoom', (obj) => {
+      this.socket.on('updateUserRoom', (obj) => {
         subscribe.next(obj);
       });
     });
@@ -35,17 +41,5 @@ export class SocketService {
 
   sendPeerId(id: string): void {
     this.socket.emit('sendPeerId', { id });
-  }
-
-  onGetUser(): Observable<BackUser> {
-    return new Observable((observer) => {
-      this.socket.on('sendUser', (user) => {
-        observer.next(user);
-      });
-    });
-  }
-
-  getUser(): void {
-    this.socket.emit('getUser');
   }
 }

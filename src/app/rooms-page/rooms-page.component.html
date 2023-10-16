@@ -31,12 +31,12 @@
             class="btn btn-small blue"
             type="submit"
             [disabled]="
-              form.invalid || form.disabled || (user?.currentRoom && user?.currentRoom?.id !== room.id)
+              form.invalid || form.disabled || (user?.currentRoom && user?.currentRoom !== room.id)
             "
           >
             <i class="material-icons">
               {{
-                user?.currentRoom?.id === room.id
+                user?.currentRoom === room.id
                   ? "Повернутися"
                   : "Увійти"
               }}</i

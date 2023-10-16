@@ -12,7 +12,7 @@ import { BackUser, User } from 'src/app/shared/interfaces';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { RoomsService } from 'src/app/shared/services/rooms.service';
 import { SocketService } from 'src/app/shared/services/socket.service';
-import { BackRoom } from '../room.interface';
+import { BackRoom, RoomUserEvent } from '../room.interface';
 import { Observable, Subscription, map, switchMap } from 'rxjs';
 import { Peer } from 'peerjs';
 
@@ -22,9 +22,12 @@ import { Peer } from 'peerjs';
   styleUrls: ['./rooms-join.component.css'],
 })
 export class RoomsJoinComponent implements OnInit, OnDestroy {
+  getParamSub!: Subscription;
+  joinSub!: Subscription;
+  gouSub!: Subscription;
   urSub!: Subscription;
-  jrSub!: Subscription;
   room!: BackRoom;
+  users: BackUser[] = [];
   localVideo: any;
   localMediaStream: any;
   peer: any;
@@ -38,63 +41,75 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnDestroy() {
+    if (this.getParamSub) this.getParamSub.unsubscribe();
+    if (this.joinSub) this.joinSub.unsubscribe();
+    if (this.gouSub) this.gouSub.unsubscribe();
     if (this.urSub) this.urSub.unsubscribe();
-    if (this.jrSub) this.jrSub.unsubscribe();
   }
 
   async ngOnInit() {
-    // 1) Перевірка підключення до кімнати
-    this.jrSub = this.activatedRoute.params.subscribe(
-      ({ id }) => {
-        this.jrSub = this.roomsService.join(id).subscribe(
-          (room) => {
+    console.log('ngOnInit');
+    await this.joinToRoom();
+    // 2) Підписка на зміни кімнати
+    this.urSub = this.socketService
+      .updateUserRoom()
+      .subscribe(async ({ room, user, event }) => {
+        if (event === RoomUserEvent.join) {
+          if (user.id === this.authService.getUser().id) return;
+          this.users.push(user);
+          await this.initOtherVideo(user);
+        } else if (event === RoomUserEvent.update) {
+          const updatedUser = this.users.find((u) => u.id === user.id);
+          if (updatedUser) updatedUser.peerId = user.peerId;
+        } else if (event === RoomUserEvent.leave) {
+          this.users.splice(
+            this.users.findIndex((u) => u.id === user.id),
+            1
+          );
+        }
+      });
+  }
+
+  async joinToRoom(): Promise<void> {
+    console.log('joinToRoom');
+    this.getParamSub = this.activatedRoute.params.subscribe({
+      next: ({ id }) => {
+        this.joinSub = this.roomsService.join(id).subscribe({
+          next: ({ room, user }) => {
+            this.users.push(user);
             this.room = room;
-            setTimeout(async () => {
-              await this.initMyVideo();
-              setTimeout(async () => {
-                for (const user of this.room.users) {
-                  if (user.id === this.authService.getUser().id) continue;
-                  await this.initOtherVideo(user);
-                }
-              }, 1000);
-            }, 1000);
             MaterialService.toast(`Ви війшли в кімнату "${this.room.name}"`);
           },
-          (error) => MaterialService.toast(error.error.message)
-        );
+          error: (error) => MaterialService.toast(error.error.message),
+          complete: async () => {
+            await this.initMyVideo();
+          },
+        });
       },
-      (error) => MaterialService.toast(error.error.message)
-    );
-
-    // 2) Підписка на зміни кімнати
-    this.urSub = this.socketService.updateRoom().subscribe(async (obj) => {
-      await this.updateUsers(obj.room, obj.user);
+      error: (error) => MaterialService.toast(error.error.message),
     });
   }
 
-  async updateUsers(room: BackRoom, user: BackUser): Promise<void> {
-    if (user.id === this.authService.getUser().id) return;
-    // 1) Добавить Юзера
-    if (!this.room.users.find((u) => u.id === user.id)) {
-      this.room.users.push(user);
-    }
-    // 2) Удалить Юзера
-    else if (!room.users.find((u) => u.id === user.id)) {
-      this.room.users.splice(
-        this.room.users.findIndex((u) => u.id === user.id),
-        1
-      );
-    }
-    // 3) Обновить Юзера
-    else {
-      const userToUpdate = <BackUser>(
-        this.room.users.find((u) => u.id === user.id)
-      );
-      userToUpdate.peerId = user.peerId;
-    }
+  async initOtherUsers(): Promise<void> {
+    console.log('initOtherUsers');
+    this.gouSub = this.roomsService.getOtherUsers(this.room.id).subscribe({
+      next: (users) => {
+        for (const user of users) {
+          this.users.push(user);
+        }
+      },
+      error: (error) => MaterialService.toast(error.error.message),
+      complete: async () => {
+        for (const user of this.users) {
+          if (user.id === this.authService.getUser().id) continue;
+          await this.initOtherVideo(user);
+        }
+      },
+    });
   }
 
   async initMyVideo(): Promise<void> {
+    console.log('initMyVideo');
     this.localMediaStream = await navigator.mediaDevices.getUserMedia({
       video: {
         width: {
@@ -118,13 +133,18 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
     this.localVideo.srcObject = this.localMediaStream;
 
     this.peer = new Peer();
-    this.peer.on('open', (id: string) => {
+    this.peer.on('open', async (id: string) => {
+      console.log('Створення мого пір ід', id);
       this.socketService.sendPeerId(id);
+      await this.initOtherUsers();
     });
+
     this.peer.on('call', (call: any) => {
+      console.log('Коли мені дзвонять', call);
       call.answer(this.localMediaStream);
       call.on('stream', (stream: any) => {
-        const user = this.room?.users.find((u) => u.peerId === call.peer);
+        console.log('stream', stream);
+        const user = this.users.find((u) => u.peerId === call.peer);
         const video = this.getVideoByUserId(user?.id || '');
         video.srcObject = stream;
         video.onloadeddata = () => video.play();
@@ -133,8 +153,12 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
   }
 
   async initOtherVideo(user: BackUser): Promise<void> {
+    console.log('initOtherVideo');
     const call = this.peer.call(user.peerId, this.localMediaStream);
+    const currentUser = this.users.find((u) => u.id === user.id);
+    if (currentUser) currentUser.localCall = call;
     call.on('stream', (stream: any) => {
+      console.log('очікуємо stream', stream);
       const video = this.getVideoByUserId(user?.id || '');
       video.srcObject = stream;
       video.onloadeddata = () => video.play();

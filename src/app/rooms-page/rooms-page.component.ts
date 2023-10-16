@@ -26,9 +26,8 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
     private rooms: RoomsService,
     private router: Router,
     private socketService: SocketService,
-    private authService: AuthService,
-  ) {
-  }
+    private authService: AuthService
+  ) {}
 
   ngOnDestroy() {
     if (this.rSub) this.rSub.unsubscribe();
@@ -37,11 +36,10 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // this.user = this.authService.getUser();
     this.uSub = this.authService.initUser().subscribe(
       (user) => {
         this.authService.setUser(user);
-        this.user = user
+        this.user = user;
       },
       (error) => {
         MaterialService.toast(error.error.message);

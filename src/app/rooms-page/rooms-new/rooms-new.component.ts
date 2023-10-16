@@ -33,9 +33,7 @@ export class RoomsNewComponent implements OnInit, OnDestroy {
     let aSub$;
     this.form.disable();
     const newRoom: ClientRoom = this.form.value;
-    aSub$ = this.roomsService.create(newRoom);
-
-    aSub$.subscribe(
+    aSub$ = this.roomsService.create(newRoom).subscribe(
       (room: BackRoom) => {
         this.room = room;
         MaterialService.toast('Кімната створена');
