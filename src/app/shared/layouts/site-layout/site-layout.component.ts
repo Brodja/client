@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-site-layout',
@@ -15,7 +16,7 @@ export class SiteLayoutComponent {
     { url: '/rooms', name: 'Кімнати' },
   ];
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router,  private socketService: SocketService) {}
 
   logout(event: Event) {
     event.preventDefault();

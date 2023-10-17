@@ -3,7 +3,7 @@
   <button
     class="waves-effect waves-light btn salet darken-1"
     routerLink="/rooms/new"
-    [disabled]="user?.currentRoom"
+    [disabled]="user?.currentRoomId"
   >
     Створити кімнату
   </button>
@@ -31,15 +31,13 @@
             class="btn btn-small blue"
             type="submit"
             [disabled]="
-              form.invalid || form.disabled || (user?.currentRoom && user?.currentRoom !== room.id)
+              form.invalid ||
+              form.disabled ||
+              (user?.currentRoomId && user?.currentRoomId !== room.id)
             "
           >
             <i class="material-icons">
-              {{
-                user?.currentRoom === room.id
-                  ? "Повернутися"
-                  : "Увійти"
-              }}</i
+              {{ user?.currentRoomId === room.id ? "Повернутися" : "Увійти" }}</i
             >
           </button>
         </form>

@@ -48,16 +48,13 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    console.log('ngOnInit');
-    await this.joinToRoom();
-    // 2) Підписка на зміни кімнати
     this.urSub = this.socketService
-      .updateUserRoom()
+      .updateUserInRoom()
       .subscribe(async ({ room, user, event }) => {
         if (event === RoomUserEvent.join) {
           if (user.id === this.authService.getUser().id) return;
           this.users.push(user);
-          await this.initOtherVideo(user);
+          this.initOtherVideo(user);
         } else if (event === RoomUserEvent.update) {
           const updatedUser = this.users.find((u) => u.id === user.id);
           if (updatedUser) updatedUser.peerId = user.peerId;
@@ -68,97 +65,102 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
           );
         }
       });
+    await this.joinToRoom();
+    await this.initMyVideo();
+    await this.initOtherUsers();
+    await this.initVideoOtherUsers();
   }
 
   async joinToRoom(): Promise<void> {
-    console.log('joinToRoom');
-    this.getParamSub = this.activatedRoute.params.subscribe({
-      next: ({ id }) => {
-        this.joinSub = this.roomsService.join(id).subscribe({
-          next: ({ room, user }) => {
-            this.users.push(user);
-            this.room = room;
-            MaterialService.toast(`Ви війшли в кімнату "${this.room.name}"`);
-          },
-          error: (error) => MaterialService.toast(error.error.message),
-          complete: async () => {
-            await this.initMyVideo();
-          },
-        });
-      },
-      error: (error) => MaterialService.toast(error.error.message),
-    });
-  }
-
-  async initOtherUsers(): Promise<void> {
-    console.log('initOtherUsers');
-    this.gouSub = this.roomsService.getOtherUsers(this.room.id).subscribe({
-      next: (users) => {
-        for (const user of users) {
-          this.users.push(user);
-        }
-      },
-      error: (error) => MaterialService.toast(error.error.message),
-      complete: async () => {
-        for (const user of this.users) {
-          if (user.id === this.authService.getUser().id) continue;
-          await this.initOtherVideo(user);
-        }
-      },
-    });
-  }
-
-  async initMyVideo(): Promise<void> {
-    console.log('initMyVideo');
-    this.localMediaStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        width: {
-          min: 320,
-          ideal: 640,
-          max: 1024,
+    return new Promise(async (resolve) => {
+      this.getParamSub = this.activatedRoute.params.subscribe({
+        next: ({ id }) => {
+          this.joinSub = this.roomsService.join(id).subscribe({
+            next: ({ room, user }) => {
+              this.users.push(user);
+              this.room = room;
+              MaterialService.toast(`Ви війшли в кімнату "${this.room.name}"`);
+              resolve();
+            },
+            error: (error) => MaterialService.toast(error.error.message),
+            complete: async () => {},
+          });
         },
-        height: {
-          min: 240,
-          ideal: 480,
-          max: 600,
-        },
-      },
-      audio: true,
-    });
-
-    const myId: string = this.authService.getUser().id.toString();
-
-    this.localVideo = this.getVideoByUserId(myId);
-    this.localVideo.muted = true;
-    this.localVideo.srcObject = this.localMediaStream;
-
-    this.peer = new Peer();
-    this.peer.on('open', async (id: string) => {
-      console.log('Створення мого пір ід', id);
-      this.socketService.sendPeerId(id);
-      await this.initOtherUsers();
-    });
-
-    this.peer.on('call', (call: any) => {
-      console.log('Коли мені дзвонять', call);
-      call.answer(this.localMediaStream);
-      call.on('stream', (stream: any) => {
-        console.log('stream', stream);
-        const user = this.users.find((u) => u.peerId === call.peer);
-        const video = this.getVideoByUserId(user?.id || '');
-        video.srcObject = stream;
-        video.onloadeddata = () => video.play();
+        error: (error) => MaterialService.toast(error.error.message),
       });
     });
   }
 
-  async initOtherVideo(user: BackUser): Promise<void> {
-    console.log('initOtherVideo');
+  async initMyVideo(): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.localMediaStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: {
+            min: 320,
+            ideal: 640,
+            max: 1024,
+          },
+          height: {
+            min: 240,
+            ideal: 480,
+            max: 600,
+          },
+        },
+        audio: true,
+      });
+      const myId: string = this.authService.getUser().id.toString();
+      this.localVideo = this.getVideoByUserId(myId);
+      this.localVideo.muted = true;
+      this.localVideo.srcObject = this.localMediaStream;
+
+      this.peer = new Peer();
+      this.peer.on('open', async (id: string) => {
+        this.socketService.sendPeerId(id);
+        resolve();
+      });
+
+      this.peer.on('call', (call: any) => {
+        call.answer(this.localMediaStream);
+        call.on('stream', (stream: any) => {
+          const user = this.users.find((u) => u.peerId === call.peer);
+          const video = this.getVideoByUserId(user?.id || '');
+          video.srcObject = stream;
+          video.onloadeddata = () => video.play();
+        });
+      });
+    });
+  }
+
+  async initOtherUsers(): Promise<void> {
+    return new Promise(async (resolve) => {
+      this.gouSub = this.roomsService.getOtherUsers(this.room.id).subscribe({
+        next: (users) => {
+          for (const user of users) {
+            this.users.push(user);
+          }
+          resolve();
+        },
+        error: (error) => MaterialService.toast(error.error.message),
+        complete: async () => {},
+      });
+    });
+  }
+
+  async initVideoOtherUsers(): Promise<void> {
+    return new Promise(async (resolve) => {
+      for (const user of this.users) {
+        if (user.id === this.authService.getUser().id) continue;
+        this.initOtherVideo(user);
+      }
+      resolve();
+    });
+  }
+
+  initOtherVideo(user: BackUser): void {
     const call = this.peer.call(user.peerId, this.localMediaStream);
     const currentUser = this.users.find((u) => u.id === user.id);
     if (currentUser) currentUser.localCall = call;
     call.on('stream', (stream: any) => {
-      console.log('очікуємо stream', stream);
       const video = this.getVideoByUserId(user?.id || '');
       video.srcObject = stream;
       video.onloadeddata = () => video.play();

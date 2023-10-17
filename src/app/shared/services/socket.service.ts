@@ -12,7 +12,7 @@ import { BackRoom, RoomUserEvent } from 'src/app/rooms-page/room.interface';
 export class SocketService {
   socket: Socket;
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,) {
     const token = authService.getToken();
     this.socket = io.connect('https://localhost:3000', { auth: { token } });
   }
@@ -27,13 +27,13 @@ export class SocketService {
   }
 
   // Зміна юзерів кімнати
-  updateUserRoom(): Observable<{
+  updateUserInRoom(): Observable<{
     room: BackRoom;
     user: BackUser;
     event: RoomUserEvent;
   }> {
     return new Observable((subscribe) => {
-      this.socket.on('updateUserRoom', (obj) => {
+      this.socket.on('updateUserInRoom', (obj) => {
         subscribe.next(obj);
       });
     });

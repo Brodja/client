@@ -36,15 +36,16 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.uSub = this.authService.initUser().subscribe(
-      (user) => {
+    this.uSub = this.authService.initUser().subscribe({
+      next: (user) => {
         this.authService.setUser(user);
         this.user = user;
       },
-      (error) => {
+      error: (error) => {
         MaterialService.toast(error.error.message);
-      }
-    );
+      },
+    });
+
     this.rSub = this.rooms.getAll().subscribe(
       (rooms: BackRoom[]) => {
         this.roomList = rooms;
