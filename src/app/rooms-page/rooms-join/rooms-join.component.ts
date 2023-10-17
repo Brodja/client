@@ -45,6 +45,11 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
     if (this.joinSub) this.joinSub.unsubscribe();
     if (this.gouSub) this.gouSub.unsubscribe();
     if (this.urSub) this.urSub.unsubscribe();
+
+    this.localMediaStream.getTracks().forEach((track: any) => {
+      console.log(track);
+      track.stop();
+    });
   }
 
   async ngOnInit() {

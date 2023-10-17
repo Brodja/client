@@ -5,6 +5,8 @@ import { Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BackUser } from '../interfaces';
 import { BackRoom, RoomUserEvent } from 'src/app/rooms-page/room.interface';
+import { Router } from '@angular/router';
+import { MaterialService } from '../classes/material.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +14,25 @@ import { BackRoom, RoomUserEvent } from 'src/app/rooms-page/room.interface';
 export class SocketService {
   socket: Socket;
   public message$: BehaviorSubject<string> = new BehaviorSubject('');
-  constructor(private authService: AuthService,) {
+  constructor(private authService: AuthService, private router: Router) {
     const token = authService.getToken();
     this.socket = io.connect('https://localhost:3000', { auth: { token } });
+    this.socket.on('disconnectUser', () => {
+      MaterialService.toast(
+        'Ви підключились з іншого вікна - Вас відключено!!!'
+      );
+      this.socket.close();
+      this.router.navigate(['/login']);
+      this.authService.logout();
+    });
+  }
+
+  setUser(): Observable<BackUser> {
+    return new Observable((subscribe) => {
+      this.socket.on('setUser', (user) => {
+        subscribe.next(user);
+      });
+    });
   }
 
   // Зміни списку кімнат
