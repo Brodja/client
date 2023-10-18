@@ -17,8 +17,6 @@ import { NewsPageComponent } from './news-page/news-page.component';
 import { StatisticsPageComponent } from './statistics-page/statistics-page.component';
 import { RoomsNewComponent } from './rooms-page/rooms-new/rooms-new.component';
 import { RoomsJoinComponent } from './rooms-page/rooms-join/rooms-join.component';
-import { RoomsSettingsComponent } from './rooms-page/rooms-join/rooms-settings/rooms-settings.component';
-import { RoomsUserItemComponent } from './rooms-page/rooms-join/rooms-user-item/rooms-user-item.component';
 
 @NgModule({
   declarations: [
@@ -34,8 +32,6 @@ import { RoomsUserItemComponent } from './rooms-page/rooms-join/rooms-user-item/
     StatisticsPageComponent,
     RoomsNewComponent,
     RoomsJoinComponent,
-    RoomsSettingsComponent,
-    RoomsUserItemComponent,
   ],
   imports: [
     BrowserModule,

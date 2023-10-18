@@ -15,6 +15,7 @@ import { SocketService } from 'src/app/shared/services/socket.service';
 import { BackRoom, RoomUserEvent } from '../room.interface';
 import { Observable, Subscription, map, switchMap } from 'rxjs';
 import { Peer } from 'peerjs';
+import { GamesService } from 'src/app/shared/services/games.service';
 
 @Component({
   selector: 'app-rooms-join',
@@ -26,18 +27,24 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
   joinSub!: Subscription;
   gouSub!: Subscription;
   urSub!: Subscription;
+  ggSub!: Subscription;
+  ngSub!: Subscription;
   room!: BackRoom;
   users: BackUser[] = [];
   localVideo: any;
   localMediaStream: any;
   peer: any;
+  user!: BackUser;
+  gameList: { name: string; id: number }[] = [];
+  gameName: string = '--Оберіть гру--';
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private socketService: SocketService,
     private roomsService: RoomsService,
-    private router: Router
+    private router: Router,
+    private gamesService: GamesService
   ) {}
 
   ngOnDestroy() {
@@ -45,6 +52,8 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
     if (this.joinSub) this.joinSub.unsubscribe();
     if (this.gouSub) this.gouSub.unsubscribe();
     if (this.urSub) this.urSub.unsubscribe();
+    if (this.ggSub) this.ggSub.unsubscribe();
+    if (this.ngSub) this.ngSub.unsubscribe();
 
     this.localMediaStream.getTracks().forEach((track: any) => {
       console.log(track);
@@ -53,6 +62,11 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    this.ggSub = this.gamesService.getAll().subscribe({
+      next: (gameList) => {
+        this.gameList = gameList;
+      },
+    });
     this.urSub = this.socketService
       .updateUserInRoom()
       .subscribe(async ({ room, user, event }) => {
@@ -82,6 +96,7 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
         next: ({ id }) => {
           this.joinSub = this.roomsService.join(id).subscribe({
             next: ({ room, user }) => {
+              this.user = user;
               this.users.push(user);
               this.room = room;
               MaterialService.toast(`Ви війшли в кімнату "${this.room.name}"`);
@@ -187,5 +202,17 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
         },
         (error) => MaterialService.toast(error.error.message)
       );
+  }
+
+  changeGame(event: any): void {
+    this.gameName = event.target.value;
+  }
+
+  createGame() {
+    this.ngSub = this.gamesService
+      .create({ name: this.gameName, roomId: this.room.id })
+      .subscribe({
+        next: (game) => {},
+      });
   }
 }

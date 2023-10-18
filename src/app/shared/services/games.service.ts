@@ -6,7 +6,11 @@ import { Observable, tap } from 'rxjs';
 export class GamesService {
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<string[]> {
-    return this.http.get<string[]>('/api/games/getAll');
+  getAll(): Observable<{ name: string; id: number }[]> {
+    return this.http.get<{ name: string; id: number }[]>('/api/games/getAll');
+  }
+
+  create({ name, roomId }: { name: string; roomId: string }): Observable<any> {
+    return this.http.post<any>('/api/games', { name, roomId });
   }
 }

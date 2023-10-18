@@ -1,3 +1,8 @@
+select {
+  display: block;
+  width: 80%;
+}
+
 .users {
   width: 100%;
   display: flex;
@@ -10,7 +15,7 @@
   flex-direction: column;
   background-color: rgb(216, 212, 212);
   padding: 5px;
-	margin-left: 10px;
+  margin-left: 10px;
   align-items: center;
 }
 
@@ -44,8 +49,25 @@ video {
   font-style: normal;
 }
 
-.buttons{
+.buttons {
   width: 100%;
   display: flex;
   justify-content: space-around;
+}
+
+.settings {
+  margin-top: 20px;
+  width: 50%;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+span.choose {
+  color: #555;
+  padding: 5px 0 10px;
+  display: inherit;
+}
+.my_select{ 
+  margin-bottom: 20px;
 }
