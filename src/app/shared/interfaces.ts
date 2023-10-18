@@ -1,4 +1,4 @@
-import { BackRoom } from "../rooms-page/room.interface";
+import { BackRoom } from "../pages/rooms-page/room.interface";
 
 export interface User {
   login?: string;

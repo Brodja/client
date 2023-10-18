@@ -4,7 +4,7 @@ import * as io from 'socket.io-client';
 import { Socket } from 'socket.io-client';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BackUser } from '../interfaces';
-import { BackRoom, RoomUserEvent } from 'src/app/rooms-page/room.interface';
+import { BackRoom, RoomUserEvent } from 'src/app/pages/rooms-page/room.interface';
 import { Router } from '@angular/router';
 import { MaterialService } from '../classes/material.service';
 

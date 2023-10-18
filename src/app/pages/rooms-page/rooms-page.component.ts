@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { RoomsService } from '../shared/services/rooms.service';
+import { RoomsService } from '../../shared/services/rooms.service';
 import { BackRoom } from './room.interface';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MaterialService } from '../shared/classes/material.service';
-import { BackUser } from '../shared/interfaces';
-import { SocketService } from '../shared/services/socket.service';
-import { AuthService } from '../shared/services/auth.service';
+import { MaterialService } from '../../shared/classes/material.service';
+import { BackUser } from '../../shared/interfaces';
+import { SocketService } from '../../shared/services/socket.service';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'app-rooms-page',

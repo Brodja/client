@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { BackUser, Message } from '../interfaces';
-import { ClientRoom, BackRoom } from 'src/app/rooms-page/room.interface';
+import { ClientRoom, BackRoom } from 'src/app/pages/rooms-page/room.interface';
 
 @Injectable({ providedIn: 'root' })
 export class RoomsService {

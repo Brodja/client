@@ -1,4 +1,4 @@
-import { BackUser } from "../shared/interfaces";
+import { BackUser } from "../../shared/interfaces";
 
 export interface ClientRoom {
   name: string;

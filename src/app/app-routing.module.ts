@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginPageComponent } from './login-page/login-page.component';
-import { ProfilePageComponent } from './profile-page/profile-page.component';
-import { RegisterPageComponent } from './register-page/register-page.component';
-import { RoomsPageComponent } from './rooms-page/rooms-page.component';
+import { LoginPageComponent } from './pages/login-page/login-page.component';
+import { ProfilePageComponent } from './pages/profile-page/profile-page.component';
+import { RegisterPageComponent } from './pages/register-page/register-page.component';
+import { RoomsPageComponent } from './pages/rooms-page/rooms-page.component';
 import { AuthGuard } from './shared/classes/auth.guard';
 import { AuthLayoutComponent } from './shared/layouts/auth-layout/auth-layout.component';
 import { SiteLayoutComponent } from './shared/layouts/site-layout/site-layout.component';
-import { NewsPageComponent } from './news-page/news-page.component';
-import { StatisticsPageComponent } from './statistics-page/statistics-page.component';
-import { RoomsNewComponent } from './rooms-page/rooms-new/rooms-new.component';
-import { RoomsJoinComponent } from './rooms-page/rooms-join/rooms-join.component';
+import { NewsPageComponent } from './pages/news-page/news-page.component';
+import { StatisticsPageComponent } from './pages/statistics-page/statistics-page.component';
+import { RoomsNewComponent } from './pages/rooms-page/rooms-new/rooms-new.component';
+import { RoomsJoinComponent } from './pages/rooms-page/rooms-join/rooms-join.component';
 
 const routes: Routes = [
   {
