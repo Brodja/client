@@ -17,6 +17,7 @@ import { NewsPageComponent } from './pages/news-page/news-page.component';
 import { StatisticsPageComponent } from './pages/statistics-page/statistics-page.component';
 import { RoomsNewComponent } from './pages/rooms-page/rooms-new/rooms-new.component';
 import { RoomsJoinComponent } from './pages/rooms-page/rooms-join/rooms-join.component';
+import { SecretHitlerLayoutComponent } from './shared/layouts/secret-hitler-layout/secret-hitler-layout.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { RoomsJoinComponent } from './pages/rooms-page/rooms-join/rooms-join.com
     StatisticsPageComponent,
     RoomsNewComponent,
     RoomsJoinComponent,
+    SecretHitlerLayoutComponent,
   ],
   imports: [
     BrowserModule,

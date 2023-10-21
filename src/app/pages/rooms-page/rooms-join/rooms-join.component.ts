@@ -212,7 +212,10 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
     this.ngSub = this.gamesService
       .create({ type: <Game>this.gameName, roomId: this.room.id })
       .subscribe({
-        next: (game) => {},
+        next: (game: any) => {
+          // console.log(this.activatedRoute.snapshot.paramMap.get('billing'));
+          this.router.navigate(['../secret_hitler']);
+        },
       });
   }
 }
