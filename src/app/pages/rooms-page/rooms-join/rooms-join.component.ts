@@ -12,7 +12,7 @@ import { BackUser, User } from 'src/app/shared/interfaces';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { RoomsService } from 'src/app/shared/services/rooms.service';
 import { SocketService } from 'src/app/shared/services/socket.service';
-import { BackRoom, RoomUserEvent } from '../room.interface';
+import { BackRoom, Game, IGameMenu, RoomUserEvent } from '../room.interface';
 import { Observable, Subscription, map, switchMap } from 'rxjs';
 import { Peer } from 'peerjs';
 import { GamesService } from 'src/app/shared/services/games.service';
@@ -35,8 +35,8 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
   localMediaStream: any;
   peer: any;
   user!: BackUser;
-  gameList: { name: string; id: number }[] = [];
-  gameName: string = '--Оберіть гру--';
+  gameList: IGameMenu[] = [];
+  gameName: string | Game = '--Оберіть гру--';
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -210,7 +210,7 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
 
   createGame() {
     this.ngSub = this.gamesService
-      .create({ name: this.gameName, roomId: this.room.id })
+      .create({ type: <Game>this.gameName, roomId: this.room.id })
       .subscribe({
         next: (game) => {},
       });

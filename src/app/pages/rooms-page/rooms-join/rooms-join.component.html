@@ -29,7 +29,7 @@
     <span class="choose">Оберіть гру</span>
     <select name="my_select" (change)="changeGame($event)" class="form-control" >
       <option>--Оберіть гру--</option>
-      <option [value]="game.name" *ngFor="let game of gameList">{{ game.name }}</option>
+      <option [value]="game.type" *ngFor="let game of gameList">{{ game.name }}</option>
     </select>
 
     <button (click)="createGame()" class="btn green darken-3" [disabled]="gameName === '--Оберіть гру--'">
