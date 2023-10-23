@@ -11,6 +11,10 @@ export class GamesService {
     return this.http.get<IGameMenu[]>('/api/games/getAll');
   }
 
+  getMyGame(): Observable<any> {
+    return this.http.get<any>('/api/games/getMyGame');
+  }
+
   create({ type, roomId }: { type: Game; roomId: string }): Observable<any> {
     return this.http.post<any>('/api/games', { type, roomId });
   }
