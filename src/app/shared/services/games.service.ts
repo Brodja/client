@@ -18,4 +18,8 @@ export class GamesService {
   create({ type, roomId }: { type: Game; roomId: string }): Observable<any> {
     return this.http.post<any>('/api/games', { type, roomId });
   }
+
+  stopGame({ gameId }: { gameId: string }): Observable<void> {
+    return this.http.post<any>('/api/games/stopGame', { gameId });
+  }
 }

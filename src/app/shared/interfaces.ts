@@ -1,4 +1,4 @@
-import { BackRoom } from "../pages/rooms-page/room.interface";
+import { BackRoom, Game } from "../pages/rooms-page/room.interface";
 
 export interface User {
   login?: string;
@@ -16,7 +16,7 @@ export interface BackUser {
   email: string;
   password: string;
   currentRoomId: string | null;
-  currentGame: BackRoom | null;
+  currentGame: { type: Game; id: string }  | null;
   peerId: string | null;
   localCall: any | undefined;
 }

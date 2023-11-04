@@ -40,6 +40,11 @@ export class RoomsPageComponent implements OnInit, OnDestroy {
       next: (user) => {
         this.authService.setUser(user);
         this.user = user;
+        if (user?.currentGame) {
+          if (this.router.url !== user?.currentGame?.type) {
+            this.router.navigate([`../${user?.currentGame?.type}`]);
+          }
+        }
       },
       error: (error) => {
         MaterialService.toast(error.error.message);

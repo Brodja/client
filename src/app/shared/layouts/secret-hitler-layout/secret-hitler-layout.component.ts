@@ -7,6 +7,7 @@ import { MaterialService } from '../../classes/material.service';
 import { AuthService } from '../../services/auth.service';
 import { Peer } from 'peerjs';
 import { SocketService } from '../../services/socket.service';
+import { BackUser, User } from '../../interfaces';
 
 @Component({
   selector: 'app-secret-hitler-layout',
@@ -16,10 +17,12 @@ import { SocketService } from '../../services/socket.service';
 export class SecretHitlerLayoutComponent implements OnInit, OnDestroy {
   getGameSub!: Subscription;
   updateOtherPeerIdSub!: Subscription;
+  finishGameSub!: Subscription;
   game!: IGame;
   localVideo: any;
   localMediaStream: any;
   peer: any;
+  myUser!: BackUser;
   constructor(
     private gamesService: GamesService,
     private router: Router,
@@ -30,6 +33,22 @@ export class SecretHitlerLayoutComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.getGameSub) this.getGameSub.unsubscribe();
     if (this.updateOtherPeerIdSub) this.updateOtherPeerIdSub.unsubscribe();
+    if (this.finishGameSub) this.finishGameSub.unsubscribe();
+  }
+
+  async finishGame(): Promise<void> {
+    console.log('finish');
+    return new Promise(async (resolve) => {
+      this.getGameSub = this.gamesService
+        .stopGame({ gameId: this.game.gameId })
+        .subscribe({
+          next: () => {},
+          error: (error) => {
+            MaterialService.toast(error.error.message);
+          },
+          complete: async () => resolve(),
+        });
+    });
   }
 
   async ngOnInit() {
@@ -43,9 +62,13 @@ export class SecretHitlerLayoutComponent implements OnInit, OnDestroy {
           this.initOtherVideo(user);
         }
       });
+    this.finishGameSub = this.socketService.finishGame().subscribe(async () => {
+      this.router.navigate(['/rooms']);
+    });
     await this.getGame();
     await this.initMyVideo();
     await this.initVideoOtherUsers();
+    this.myUser = this.authService.getUser();
   }
 
   async getGame(): Promise<void> {
@@ -88,7 +111,6 @@ export class SecretHitlerLayoutComponent implements OnInit, OnDestroy {
       this.localVideo.srcObject = this.localMediaStream;
       this.peer = new Peer();
       this.peer.on('open', async (id: string) => {
-        console.log('sendGamePeerId', id)
         this.socketService.sendGamePeerId(id, this.game.gameId);
         resolve();
       });

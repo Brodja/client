@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { BackUser, User } from '../interfaces';
 import { MaterialService } from '../classes/material.service';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private token: string = '';
   private user: BackUser | null = null;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   register(user: User): Observable<User> {
     return this.http.post<User>('/api/auth/register', user);
@@ -27,7 +28,7 @@ export class AuthService {
   }
 
   initUser(): Observable<BackUser> {
-    return this.http.get<BackUser>('/api/auth/profile')
+    return this.http.get<BackUser>('/api/auth/profile');
   }
 
   setToken(token: string): void {
@@ -43,6 +44,11 @@ export class AuthService {
   }
 
   getUser(): BackUser {
+    if (this.user?.currentGame) {
+      if (this.router.url !== this.user?.currentGame?.type) {
+        this.router.navigate([`../${this.user?.currentGame?.type}`]);
+      }
+    }
     return <BackUser>this.user;
   }
 

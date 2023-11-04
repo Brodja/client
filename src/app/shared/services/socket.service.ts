@@ -91,4 +91,13 @@ export class SocketService {
       });
     });
   }
+
+  // Оновлення відео іншого учасника
+  finishGame(): Observable<void> {
+    return new Observable((subscribe) => {
+      this.socket.on('finishGame', () => {
+        subscribe.next();
+      });
+    });
+  }
 }

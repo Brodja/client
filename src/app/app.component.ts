@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from './shared/services/auth.service';
 import { MaterialService } from './shared/classes/material.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   uSub!: Subscription;
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   ngOnDestroy() {
     if (this.uSub) this.uSub.unsubscribe();
@@ -22,6 +23,11 @@ export class AppComponent implements OnInit, OnDestroy {
       this.uSub = this.authService.initUser().subscribe(
         (user) => {
           this.authService.setUser(user);
+          if (user?.currentGame) {
+            if (this.router.url !== user?.currentGame?.type) {
+              this.router.navigate([`../${user?.currentGame?.type}`]);
+            }
+          }
         },
         (error) => {
           MaterialService.toast(error.error.message);
