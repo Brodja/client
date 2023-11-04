@@ -17,9 +17,11 @@ export interface IGameUser {
   // socket: Socket;
   // socket: string;
   gameRole: GameRole;
+  peerId: string;
   lastVote?: boolean;
   lastAction?: ILastAction;
   killed?: boolean;
+  localCall?: any;
 }
 
 export enum GlobalRole {
@@ -41,4 +43,10 @@ export enum GameRole {
 export interface ILastAction {
   // event: GameSocketEvent | null;
   dataToSend: any;
+}
+
+export interface IHitlerSocketMessage {
+  gameId: string;
+  event: string;
+  data: any;
 }

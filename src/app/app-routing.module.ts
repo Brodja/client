@@ -37,7 +37,7 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'secret_hitler',
+    path: 'Secret_Hitler',
     component: SecretHitlerLayoutComponent,
     canActivate: [AuthGuard],
   },

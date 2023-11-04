@@ -29,6 +29,7 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
   urSub!: Subscription;
   ggSub!: Subscription;
   ngSub!: Subscription;
+  initGameSub!: Subscription;
   room!: BackRoom;
   users: BackUser[] = [];
   localVideo: any;
@@ -54,6 +55,7 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
     if (this.urSub) this.urSub.unsubscribe();
     if (this.ggSub) this.ggSub.unsubscribe();
     if (this.ngSub) this.ngSub.unsubscribe();
+    if (this.initGameSub) this.initGameSub.unsubscribe();
 
     this.localMediaStream.getTracks().forEach((track: any) => {
       console.log(track);
@@ -83,6 +85,11 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
             1
           );
         }
+      });
+    this.initGameSub = this.socketService
+      .initGame()
+      .subscribe(async (type) => {
+        this.router.navigate([`../${type}`]);
       });
     await this.joinToRoom();
     await this.initMyVideo();
@@ -214,7 +221,6 @@ export class RoomsJoinComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (game: any) => {
           // console.log(this.activatedRoute.snapshot.paramMap.get('billing'));
-          this.router.navigate(['../secret_hitler']);
         },
       });
   }
