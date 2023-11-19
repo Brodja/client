@@ -37,7 +37,6 @@ export class SecretHitlerLayoutComponent implements OnInit, OnDestroy {
   }
 
   async finishGame(): Promise<void> {
-    console.log('finish');
     return new Promise(async (resolve) => {
       this.getGameSub = this.gamesService
         .stopGame({ gameId: this.game.gameId })
